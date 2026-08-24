@@ -33,9 +33,10 @@ jobs:
           if [ -f "debug.keystore.base64" ]; then
             base64 -d debug.keystore.base64 > debug.keystore
           fi
-          if [ ! -f ".env" ] && [ -f ".env.example" ]; then
-            cp .env.example .env
-          elif [ ! -f ".env" ]; then
+          if [ ! -f ".env.example" ]; then
+            touch .env.example
+          fi
+          if [ ! -f ".env" ]; then
             touch .env
           fi
 
