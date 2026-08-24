@@ -63,6 +63,12 @@ android {
   }
 }
 
+// Auto-create .env and .env.example if missing so Secrets Gradle Plugin never fails
+val rootEnv = rootProject.file(".env")
+if (!rootEnv.exists()) rootEnv.createNewFile()
+val rootEnvExample = rootProject.file(".env.example")
+if (!rootEnvExample.exists()) rootEnvExample.createNewFile()
+
 // Configure the Secrets Gradle Plugin to use .env and .env.example files
 // to match the convention used in Web projects.
 secrets {
