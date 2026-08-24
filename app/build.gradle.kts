@@ -1,4 +1,5 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import java.util.Base64
 
 plugins {
   alias(libs.plugins.android.application)
@@ -68,6 +69,18 @@ val rootEnv = rootProject.file(".env")
 if (!rootEnv.exists()) rootEnv.createNewFile()
 val rootEnvExample = rootProject.file(".env.example")
 if (!rootEnvExample.exists()) rootEnvExample.createNewFile()
+
+// Auto-restore debug.keystore from base64 if missing so debug signing never fails
+val rootKeystore = rootProject.file("debug.keystore")
+val rootKeystoreBase64 = rootProject.file("debug.keystore.base64")
+if (!rootKeystore.exists() && rootKeystoreBase64.exists()) {
+  try {
+    val decodedBytes = Base64.getDecoder().decode(rootKeystoreBase64.readText().trim())
+    rootKeystore.writeBytes(decodedBytes)
+  } catch (e: Exception) {
+    e.printStackTrace()
+  }
+}
 
 // Configure the Secrets Gradle Plugin to use .env and .env.example files
 // to match the convention used in Web projects.
